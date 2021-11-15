@@ -6,8 +6,9 @@ clientPort=2181
 autopurge.snapRetainCount=3
 autopurge.purgeInterval=1
 {% for host in groups['zkhosts'] %}
-    {% if ansible_hostname == host %}
+{% if ansible_fqdn|string() == host|string() %}
 server.{{ host | regex_search('(zk0[1-9]\\.foo\\.bar)') | regex_replace('\\.foo\\.bar', '') | regex_replace('^zk0', '') }}=0.0.0.0:2888:3888;2181
-    {% else %}
+{% else %}
 server.{{ host | regex_search('(zk0[1-9]\\.foo\\.bar)') | regex_replace('\\.foo\\.bar', '') | regex_replace('^zk0', '') }}={{ host }}:2888:3888;2181
+{% endif %}
 {% endfor %}
