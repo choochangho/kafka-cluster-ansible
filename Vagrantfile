@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
                 vb.memory = 4096
             end
             config.vm.hostname = "zk0#{i}.foo.bar"
-            config.vm.network "private_network", ip: "172.31.12.1#{i}"
+            config.vm.network "private_network", ip: "172.41.12.1#{i}"
         end
     end
 
@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
                 vb.memory = 4096
             end
             config.vm.hostname = "kafka0#{i}.foo.bar"
-            config.vm.network "private_network", ip: "172.31.12.2#{i}"
+            config.vm.network "private_network", ip: "172.41.12.2#{i}"
         end
     end
 
@@ -39,7 +39,7 @@ Vagrant.configure("2") do |config|
             vb.memory = 4096
         end
         config.vm.hostname = "ansible01.foo.bar"
-        config.vm.network "private_network", ip: "172.31.12.30"
+        config.vm.network "private_network", ip: "172.41.12.31"
     end
 
     # Hostmanager plugin
