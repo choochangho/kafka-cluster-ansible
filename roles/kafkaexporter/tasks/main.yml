@@ -1,0 +1,44 @@
+---
+- name: 카프카 익스포터 다운로드
+  get_url:
+    url: https://github.com/danielqsj/kafka_exporter/releases/download/v1.2.0/kafka_exporter-1.2.0.linux-386.tar.gz
+    dest: /opt/
+    mode: '0600'
+
+- name: 카프카 익스포터 압축해제
+  unarchive:
+    src: /opt/kafka_exporter-1.2.0.linux-386.tar.gz
+    dest: /usr/local/
+    remote_src: yes
+
+- name: 카프카 익스포터 디렉토리 이동
+  copy:
+    remote_src: yes
+    src: /usr/local/kafka_exporter-1.2.0.linux-386/kafka_exporter
+    dest: /usr/sbin/
+    mode: '0755'
+
+- name: 카프카 익스포터 중지 스크립트 복사
+  copy:
+    src: kafka-exporter-stop.sh
+    dest: /usr/sbin/kafka-exporter-stop.sh
+    mode: '0755'
+
+- name: 카프카 익스포터 서비스 등록
+  template:
+    src: kafka-exporter.service.j2
+    dest: /etc/systemd/system/kafka-exporter.service
+    owner: root
+    group: root
+    mode: '0644'
+    backup: no
+
+- name: systemd 설정 reload
+  systemd:
+    daemon_reload: yes
+
+- name: 서비스 실행 확인
+  systemd:
+    state: started
+    name: kafka-exporter
+    enabled: yes

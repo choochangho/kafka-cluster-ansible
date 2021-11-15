@@ -1,0 +1,74 @@
+---
+- name: 카프카 서버 중지
+  systemd:
+    state: stopped
+    name: kafka-server
+  ignore_errors: yes
+
+- name: 카프카 디렉토리 삭제
+  file:
+    path: "{{ dir_path }}"
+    state: absent
+
+- name: 카프카 디렉토리 생성
+  file:
+    path: "{{ dir_path }}"
+    state: directory
+    mode: '0755'
+
+- name: 카프카 바이너리 다운로드
+  get_url:
+    url: https://archive.apache.org/dist/kafka/{{ kafkaversion }}/kafka_2.12-{{ kafkaversion }}.tgz
+    dest: /opt/
+    mode: '0600'
+
+- name: 카프카 압축 해제
+  unarchive:
+    src: /opt/kafka_2.12-{{ kafkaversion }}.tgz
+    dest: /usr/local
+    remote_src: yes
+
+- name: 카프카 심볼릭 링크
+  file:
+    path: /usr/local/kafka
+    src: /usr/local/kafka_2.12-{{ kafkaversion }}
+    state: link
+    force: yes
+
+- name: 카프카 서버(server.properties) 설정 파일 복사
+  template:
+    src: server.properties.j2
+    dest: /usr/local/kafka/config/server.properties
+    mode: '0644'
+    backup: no
+
+- name: 카프카 설정 파일 복사
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/kafka/config/
+    mode: '0644'
+    backup: no
+  with_items:
+    - jmx
+    - connect-distributed.properties
+
+- name: 카프카 서버 서비스 등록
+  copy:
+    src: "{{ item }}"
+    dest: /etc/systemd/system/
+    owner: root
+    group: root
+    mode: '0644'
+    backup: no
+  with_items:
+    - kafka-server.service
+    - kafka-connect.service
+
+- name: systemd 설정 reload
+  systemd:
+    daemon_reload: yes
+
+- name: 서비스 실행 확인
+  systemd:
+    state: started
+    name: kafka-server

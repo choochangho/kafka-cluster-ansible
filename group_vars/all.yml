@@ -1,0 +1,6 @@
+user_name: vagrant
+krb_realm: FOO.BAR
+krb_dns: foo.bar
+kadmin_pass: vagrant
+kdc_server: zk01.foo.bar
+kafkaversion: 2.6.0

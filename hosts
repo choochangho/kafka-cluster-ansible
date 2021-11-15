@@ -1,0 +1,12 @@
+[zkhosts]
+zk01.foo.bar
+zk02.foo.bar
+zk03.foo.bar
+
+[kafkahosts]
+kafka01.foo.bar
+kafka02.foo.bar
+kafka03.foo.bar
+
+[kerberoshosts]
+zk01.foo.bar

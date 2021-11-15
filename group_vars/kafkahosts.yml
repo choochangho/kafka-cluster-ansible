@@ -1,0 +1,3 @@
+brokerid: "{{ inventory_hostname | regex_search('(kafka0[1-9]\\.foo\\.bar)') | regex_replace('\\.foo\\.bar', '') | regex_replace('^kafka0', '') }}"
+zookeeperinfo: zk01.foo.bar:2181,zk02.foo.bar:2181,zk03.foo.bar:2181
+dir_path: /data/kafka-logs
